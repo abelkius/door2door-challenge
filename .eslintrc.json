@@ -12,6 +12,12 @@
       {
         "allow": ["warn", "error", "info"]
       }
+    ],
+    "no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_"
+      }
     ]
   }
 }

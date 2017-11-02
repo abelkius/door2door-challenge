@@ -12,7 +12,7 @@ const controllers = {
     if (!vehicle || !vehicle.id) {
       return Promise.reject(new Error('Vehicle you are trying to create must contain an unique id'));
     }
-    vehicles[vehicle.id] = {...vehicle, locations: []};
+    vehicles[vehicle.id] = Object.assign({}, vehicle, {locations: []});
     return Promise.resolve({});
   },
   deleteOne: index => {
@@ -31,7 +31,7 @@ const controllers = {
   }
 };
 
-export default {
+module.exports = {
   getAll: (req, res, next) =>
     controllers
       .getAll()

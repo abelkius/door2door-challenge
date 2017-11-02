@@ -1,7 +1,7 @@
-import express from 'express';
-import routeControllers from './vehicle.controller';
+const express = require('express');
+const routeControllers = require('./controller');
 
-export const vehicleRouter = express.Router();
+const vehicleRouter = express.Router();
 
 vehicleRouter
   .route('/')
@@ -14,3 +14,5 @@ vehicleRouter
   .delete(routeControllers.deleteOne);
 
 vehicleRouter.route('/:id/locations').post(routeControllers.createLocation);
+
+module.exports = vehicleRouter;
