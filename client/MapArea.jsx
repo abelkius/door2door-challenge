@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {Map, TileLayer, Circle, Marker} from 'react-leaflet';
-import Leaflet from 'leaflet';
+import {Map, TileLayer, Circle, Marker, FeatureGroup, Polyline} from 'react-leaflet';
+import ColorHash from 'color-hash';
+import createIcon from './Icon';
 import Spinner from './Spinner';
 
 class MapArea extends Component {
@@ -10,6 +11,7 @@ class MapArea extends Component {
     this.state = {
       vehicles: []
     };
+    this.colorHash = new ColorHash();
     this.prepareMap();
   }
   componentDidMount() {
@@ -31,30 +33,33 @@ class MapArea extends Component {
   }
 
   prepareMap() {
-    this.vehicleIcon = Leaflet.icon({
-      iconUrl: '/img/car.svg',
-      iconSize: [38, 95],
-      iconAnchor: [22, 94],
-      popupAnchor: [-3, -76]
-    });
-
     this.office = [52.53, 13.403];
     this.zoom = 13;
     this.radius = 3500;
   }
   render() {
-    let markers;
+    let markers = <Spinner />;
     if (this.state.vehicles.length) {
       markers = this.state.vehicles.map(vehicle => {
-        const lastPos = vehicle.locations[vehicle.locations.length - 1];
-        if (lastPos) {
-          return <Marker key={vehicle.id} position={[lastPos.lat, lastPos.lng]} icon={this.vehicleIcon} />;
+        const locations = vehicle.locations.map(l => [l.lat, l.lng]);
+        if (locations.length) {
+          const color = this.colorHash.hex(vehicle.id);
+
+          return (
+            <FeatureGroup key={vehicle.id}>
+              <Polyline positions={locations} color={color} />
+              <Marker
+                style={{backgroundColor: color}}
+                position={locations[locations.length - 1]}
+                icon={createIcon(color)}
+              />
+            </FeatureGroup>
+          );
         }
-        return '';
+        return <FeatureGroup key={vehicle.id} />;
       });
-    } else {
-      markers = <Spinner />;
     }
+
     return (
       <Map center={this.office} zoom={this.zoom}>
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />

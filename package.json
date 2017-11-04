@@ -12,6 +12,12 @@
     "watch": "webpack --watch",
     "dev": "webpack-dev-server"
   },
+  "nodemonConfig": {
+    "ignore": [
+      "public/*",
+      "client/*"
+    ]
+  },
   "dependencies": {
     "babel-plugin-dev-expression": "^0.2.1",
     "babel-preset-react": "^6.24.1",
