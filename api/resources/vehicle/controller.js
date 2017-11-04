@@ -1,24 +1,27 @@
 const _ = require('lodash');
+const geolib = require('geolib');
 
 const vehicles = [];
+const office = [52.53, 13.403];
+const cityRadius = 3500;
 
 const controllers = {
-  getAll: () => Promise.resolve(vehicles),
-  getOne: id => {
+  getAllVehicles: () => Promise.resolve(vehicles),
+  getVehicle: id => {
     const found = _.find(vehicles, {id});
     if (!found) {
       return Promise.reject(new Error('Vehicle you are trying to get does not exist'));
     }
     return Promise.resolve(found);
   },
-  createOne: vehicle => {
+  createVehicle: vehicle => {
     if (!vehicle || !vehicle.id) {
       return Promise.reject(new Error('Vehicle you are trying to create must contain an unique id'));
     }
     vehicles.push(Object.assign({}, vehicle, {locations: []}));
     return Promise.resolve({});
   },
-  deleteOne: id => {
+  deleteVehicle: id => {
     const foundVehicle = _.find(vehicles, {id});
     if (!foundVehicle) {
       return Promise.reject(new Error('Vehicle you are trying to delete does not exist'));
@@ -27,43 +30,55 @@ const controllers = {
     vehicles.splice(index, 1);
     return Promise.resolve({});
   },
-  createLocation: (id, location) => {
+  validateLocation(id, location) {
+    const newLocation = [location.lat, location.lng];
     const found = _.find(vehicles, {id});
+
     if (!found) {
       console.info(`Vehicle with id ${id} does not exist, location ${location.lng} ${location.lat}`);
-    } else {
-      found.locations.push(location);
+      return Promise.resolve(null);
+    }
+    if (!geolib.isPointInCircle(newLocation, office, cityRadius)) {
+      console.info(`Location ${location.lng} ${location.lat} is outside of city boundries`);
+      return Promise.resolve(null);
+    }
+    return Promise.resolve(found);
+  },
+  createLocation: (vehicle, location) => {
+    if (vehicle) {
+      vehicle.locations.push(location);
     }
     return Promise.resolve({});
   }
 };
 
 module.exports = {
-  getAll: (req, res, next) =>
+  getAllVehicles: (req, res, next) =>
     controllers
-      .getAll()
+      .getAllVehicles()
       .then(data => res.status(200).json(data))
       .catch(error => next(error)),
-  getOne: (req, res, next) =>
+  getVehicle: (req, res, next) =>
     controllers
-      .getOne(req.params.id)
+      .getVehicle(req.params.id)
       .then(data => res.status(200).json(data))
       .catch(error => next(error)),
 
-  createOne: (req, res, next) =>
+  createVehicle: (req, res, next) =>
     controllers
-      .createOne(req.body)
+      .createVehicle(req.body)
       .then(data => res.status(204).json(data))
       .catch(error => next(error)),
 
-  deleteOne: (req, res, next) =>
+  deleteVehicle: (req, res, next) =>
     controllers
-      .deleteOne(req.params.id)
+      .deleteVehicle(req.params.id)
       .then(data => res.status(204).json(data))
       .catch(error => next(error)),
   createLocation: (req, res, next) =>
     controllers
-      .createLocation(req.params.id, req.body)
+      .validateLocation(req.params.id, req.body)
+      .then(data => controllers.createLocation(data, req.body))
       .then(data => res.status(204).json(data))
       .catch(error => next(error))
 };

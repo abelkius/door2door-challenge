@@ -5,13 +5,13 @@ const vehicleRouter = express.Router();
 
 vehicleRouter
   .route('/')
-  .get(routeControllers.getAll)
-  .post(routeControllers.createOne);
+  .get(routeControllers.getAllVehicles)
+  .post(routeControllers.createVehicle);
 
 vehicleRouter
   .route('/:id')
-  .get(routeControllers.getOne)
-  .delete(routeControllers.deleteOne);
+  .get(routeControllers.getVehicle)
+  .delete(routeControllers.deleteVehicle);
 
 vehicleRouter.route('/:id/locations').post(routeControllers.createLocation);
 

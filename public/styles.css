@@ -10,3 +10,9 @@ body {
   width: 80%;
   margin: 0 auto;
 }
+
+.marker-cluster-small,
+.marker-cluster-small div {
+  background-color: rgba(72, 61, 139, 0.6);
+  color: #ffffff;
+}
