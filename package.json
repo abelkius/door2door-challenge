@@ -19,6 +19,7 @@
     ]
   },
   "dependencies": {
+    "aws-sdk": "^2.145.0",
     "babel-plugin-dev-expression": "^0.2.1",
     "babel-preset-react": "^6.24.1",
     "body-parser": "^1.18.2",
