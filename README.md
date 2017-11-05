@@ -1,6 +1,6 @@
 # Vehicles tracking app
 
-The application uses node.js with express framework on the backend and react library on the frontend.
+Simple vehicle fullstack tracking app, which visualizes the movement of the vehicles on a map.
 
 # How to start
 
@@ -9,7 +9,7 @@ Prerequisite:
 * npm or yarn
 
 ## To start locally ##
-#### frontend ####
+#### Frontend ####
 
 Go to `client` directory and to install all dependencies run:
 ```bash
@@ -21,7 +21,7 @@ yarn start
 ```
 Frontend application will be available on `localhost:4000`
 
-#### backend ####  
+#### Backend ####  
 Go to `api` directory and to install all dependencies run:
 ```bash
 yarn install
@@ -31,7 +31,7 @@ and then to start the server:
 yarn start
 ```
 Backend application's endpoints will be available on `localhost:8080`
-#### database ####
+#### Database ####
 The database used for this project is a AWS DynamoDB.
 To use it locally you need to install a node implementation called Dynalite.
 Run:
@@ -70,7 +70,7 @@ the first argument is the hostname, the second - a path prefix.
 I used node.js with express for my backend application. The biggest challenge was the database. I didn't use dynamoDB before, but I wanted to try it so I can learn a little bit more about AWS and also deploy the application on AWS Lambda and to use API Gateway for the communication with my api. In this project the deployment is done using a tool called `up` that allows fast deployment and configuration both for services as well as the static frontend resources.
 
 #### Frontend ####
-As far as the frontend is concerned I used `react` library and react-leaflet module for map visualisation. I used react, because I find it nice to work with a framework that allows for a lot of flexibility but still is a big help while manipulating the DOM, I am quite new to this library but I do enjoy using it a lot.
+As far as the frontend is concerned I used `react` library and react-leaflet module for map visualization. I used react, because I find it nice to work with a framework that allows for a lot of flexibility but still is a big help while manipulating the DOM, I am quite new to this library but I do enjoy using it a lot.
 Additionaly I used a leaflet plugin called `react-leaflet-markercluster` to show the clustering of the vehicles markers.
 I also used `styled-components` for styling inside react components, but global styles are still added as a separate css file.
 
