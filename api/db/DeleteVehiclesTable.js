@@ -1,17 +1,6 @@
-const AWS = require('aws-sdk');
+const {client} = require('./DynamoDB');
 
-AWS.config.update({
-  region: 'us-west-2',
-  endpoint: 'http://localhost:4567'
-});
-
-const dynamodb = new AWS.DynamoDB();
-
-const params = {
-  TableName: 'Vehicles'
-};
-
-dynamodb.deleteTable(params, (err, data) => {
+client.deleteTable({}, (err, data) => {
   if (err) {
     console.error('Unable to delete table. Error JSON:', JSON.stringify(err, null, 2));
   } else {

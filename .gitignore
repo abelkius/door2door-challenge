@@ -1,3 +1,2 @@
 node_modules
-dist
-public/bundle.js
+client/public/bundle.js

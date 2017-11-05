@@ -1,27 +1,18 @@
-const AWS = require('aws-sdk');
-
-AWS.config.update({
-  region: 'us-west-2',
-  endpoint: 'http://localhost:4567'
-});
-
-const docClient = new AWS.DynamoDB.DocumentClient();
-const table = 'Vehicles';
+const {docClient} = require('../../db/DynamoDB');
 
 const createVehicle = (req, res, next) => {
   const params = {
-    TableName: table,
     Item: {
       id: req.body.id,
       locations: []
     }
   };
 
-  docClient.put(params, (err, data) => {
+  docClient.put(params, err => {
     if (err) {
       next(Error('Unable to add vehicle. Error JSON:', JSON.stringify(err, null, 2)));
     } else {
-      console.info('Added vehicle:', data.Item.id);
+      console.info('Added vehicle:', req.params.id);
       res.status(204).json();
     }
   });
@@ -29,7 +20,6 @@ const createVehicle = (req, res, next) => {
 
 const getVehicle = (req, res, next) => {
   const params = {
-    TableName: table,
     ConsistentRead: true,
     Key: {
       id: req.params.id
@@ -38,7 +28,7 @@ const getVehicle = (req, res, next) => {
 
   docClient.get(params, (err, data) => {
     if (err || !data.Item) {
-      next(Error('Unable to read vehicle. Error JSON:', JSON.stringify(err, null, 2)));
+      next(new Error(`Unable to read vehicle.\n${JSON.stringify(err, null, 2)}`));
     } else {
       console.info('Getting vehicle succeeded:', data.Item.id);
       res.json(data.Item);
@@ -47,7 +37,6 @@ const getVehicle = (req, res, next) => {
 };
 const deleteVehicle = (req, res, next) => {
   const params = {
-    TableName: table,
     Key: {
       id: req.params.id
     }
@@ -63,17 +52,13 @@ const deleteVehicle = (req, res, next) => {
   });
 };
 const getAllVehicles = (req, res, next) => {
-  const params = {
-    TableName: table
-  };
-
   const result = [];
 
-  docClient.scan(params, onScan);
+  docClient.scan({}, onScan);
 
   function onScan(err, data) {
     if (err) {
-      next(Error('Unable to scan the table. Error JSON:', JSON.stringify(err, null, 2)));
+      next(new Error(`Unable to scan the table.\n${JSON.stringify(err, null, 2)}`));
     } else {
       // get all vehicles
       console.info('Scan succeeded.');
@@ -82,8 +67,7 @@ const getAllVehicles = (req, res, next) => {
       // continue scanning if data exceeds 1MB, which is a scan limit in dynamDB
       if (typeof data.LastEvaluatedKey !== 'undefined') {
         console.info('Scanning for more...');
-        params.ExclusiveStartKey = data.LastEvaluatedKey;
-        docClient.scan(params, onScan);
+        docClient.scan({ExclusiveStartKey: data.LastEvaluatedKey}, onScan);
       }
       res.json(result);
     }
@@ -91,7 +75,6 @@ const getAllVehicles = (req, res, next) => {
 };
 const addLocation = (req, res, next) => {
   const params = {
-    TableName: table,
     Key: {
       id: req.params.id
     },

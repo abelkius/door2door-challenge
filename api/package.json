@@ -1,0 +1,19 @@
+{
+  "name": "door2door-challenge-server",
+  "private": true,
+  "author": "abelkius <abelkius@gmail.com>",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.145.0",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "geolib": "^2.0.24"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1"
+  }
+}

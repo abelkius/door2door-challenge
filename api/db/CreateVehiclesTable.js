@@ -1,14 +1,6 @@
-const AWS = require('aws-sdk');
-
-AWS.config.update({
-  region: 'eu-central-1',
-  endpoint: 'http://localhost:4567'
-});
-
-const dynamodb = new AWS.DynamoDB();
+const {client} = require('./DynamoDB');
 
 const params = {
-  TableName: 'Vehicles',
   KeySchema: [{AttributeName: 'id', KeyType: 'HASH'}],
   AttributeDefinitions: [{AttributeName: 'id', AttributeType: 'S'}],
   ProvisionedThroughput: {
@@ -17,7 +9,7 @@ const params = {
   }
 };
 
-dynamodb.createTable(params, (err, data) => {
+client.createTable(params, (err, data) => {
   if (err) {
     console.error('Unable to create table. Error JSON:', JSON.stringify(err, null, 2));
   } else {
