@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import MapArea from './MapArea';
 import Spinner from './Spinner';
+import Endpoint from './Endpoint';
 
 class Content extends Component {
   constructor(props) {
@@ -20,7 +21,7 @@ class Content extends Component {
       mode: 'cors'
     };
 
-    fetch('http://localhost:8080/vehicles', reqConfig)
+    fetch(`${Endpoint}/vehicles`, reqConfig)
       .then(res => res.json())
       .then(data => {
         console.info('data: ', data);

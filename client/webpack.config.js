@@ -3,7 +3,7 @@ const webpack = require('webpack');
 
 module.exports = {
   context: __dirname,
-  entry: ['webpack-dev-server/client?http://localhost:4000', './client/App.jsx'],
+  entry: ['webpack-dev-server/client?http://localhost:4000', './app/App.jsx'],
   output: {
     path: path.join(__dirname, 'public'),
     filename: 'bundle.js'
@@ -29,12 +29,12 @@ module.exports = {
   ],
   module: {
     rules: [
-      // {
-      //   enforce: 'pre',
-      //   test: /\.jsx?$/,
-      //   loader: 'eslint-loader',
-      //   exclude: /node_modules/
-      // },
+      {
+        enforce: 'pre',
+        test: /\.jsx?$/,
+        loader: 'eslint-loader',
+        exclude: /node_modules/
+      },
       {
         test: /\.jsx?$/,
         exclude: /node_modules/,
