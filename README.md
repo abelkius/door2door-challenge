@@ -12,49 +12,61 @@ Preconditions:
 #### frontend ####
 
 Go to `client` directory and to install all dependencies run:
-```yarn install
+```bash
+yarn install
 ```
 or
-```npm install
+```bash
+npm install
 ```
 and then build the app and start the server run:
-```yarn start
+```bash
+yarn start
 ```
 or
-```npm start
+```bash
+npm start
 ```
 Frontend application will be available on `localhost:4000`
 
 #### backend ####  
 Go to `api` directory and to install all dependencies run:
-```yarn install
+```bash
+yarn install
 ```
 or
-```npm install
+```bash
+npm install
 ```
 and then to start the server:
-```yarn start
+```bash
+yarn start
 ```
 or
-```npm start
+```bash
+npm start
 ```
 Backend application's endpoints will be available on `localhost:8080`
 #### database ####
 The database used for this project is a AWS DynamoDB.
 To use it locally you need to install a node implementation called Dynalite.
 Run:
-```npm install -g dynalite
+```bash
+npm install -g dynalite
 ```
 or
-```yarn install -g dynalite
+```bash
+yarn install -g dynalite
 ```
 
 And then start the database on port `4567`:
-```dynolite
+```bash
+dynolite
 ```
 
 To start receiving the vahicles updates go to `driver-simulator` directory in `fullstack-code-challenge` project and run:
-```yarn start localhost:8080
+```bash
+yarn start localhost:8080
 ```
 
 ## To start test the version deployed to production ##
@@ -68,7 +80,8 @@ The reason why is that the deployed backend service is using https protocol as w
 The fork of the simulator can be found here: https://github.com/abelkius/fullstack-code-challenge
 
 To run this simulator you need to clone it and the in the `driver-simulator` directory run:
-```yarn start 8t4thjdijg.execute-api.eu-central-1.amazonaws.com development
+```bash
+yarn start 8t4thjdijg.execute-api.eu-central-1.amazonaws.com development
 ```
 the first argument is the hostname, the second - a path prefix.
 
@@ -84,15 +97,18 @@ I also used `styled-components` for styling inside react components, but global 
 #### linting ####
 To keep the api part lighweight I didn't wanted to include eslint inside the `api` directory. So I added eslint to the top level directory.
 It is possible to run the linter form the top directory after installing dependecies there with:
-```yarn installing
+```bash
+yarn install
 ```
 and then running:
-```yarn eslint
+```bash
+yarn eslint
 ```
 
 ## what didn't make it to the final product ##
 * I didn't write the tests for the app. The AWS part of the challenge took me some time and I decided to focus on it and learn something new sacrificing the tests for that.
 * The Dockerfile is not there but I do think that the publicly hosted solution is a nicer experience :)
+* I am not sure if the solution I used for rejecting the locations outside of the city boundries was exactly the desired one, it wasn't 100% clear to me.
 
 ## Summary ##
 I did enjoy this task a lot and learn a bunch of new technologies while developing it :)
