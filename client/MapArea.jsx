@@ -1,104 +1,78 @@
-import React, {Component} from 'react';
-import {Map, TileLayer, Circle, FeatureGroup, Polyline} from 'react-leaflet';
+import React from 'react';
+import PropTypes from 'prop-types';
+import {Map, TileLayer, Circle, Polyline} from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import ColorHash from 'color-hash';
 import createIcon from './Icon';
-import Spinner from './Spinner';
 
-class MapArea extends Component {
-  constructor(props) {
-    super();
-    this.props = props;
-    this.state = {
-      vehicles: []
-    };
-    this.colorHash = new ColorHash();
-    this.prepareMap();
-  }
+const colorHash = new ColorHash();
+const config = {
+  office: [52.53, 13.403],
+  zoom: 13,
+  maxZoom: 20,
+  radius: 3500,
+  themeColor: '#483d8b',
+  bgColor: '#ffffff'
+};
 
-  componentDidMount() {
-    setInterval(this.getVehicles.bind(this), 3000);
-  }
-
-  getVehicles() {
-    const reqConfig = {
-      method: 'GET',
-      mode: 'cors'
-    };
-
-    fetch('http://localhost:8080/vehicles', reqConfig)
-      .then(res => res.json())
-      .then(data => {
-        console.info('data: ', data);
-        this.setState({vehicles: data});
+const MapArea = ({vehicles}) => {
+  let clusteredMarkers = [];
+  if (vehicles.length) {
+    clusteredMarkers = vehicles
+      .filter(vehicle => {
+        const lastPos = vehicle.locations[vehicle.locations.length - 1];
+        return lastPos && Date.parse(lastPos.at) + 6000 >= Date.now();
       })
-      .catch(err => console.error('Error: ', err));
-  }
-
-  prepareMap() {
-    this.config = {
-      office: [52.53, 13.403],
-      zoom: 13,
-      radius: 3500,
-      themeColor: '#483d8b',
-      bgColor: '#ffffff'
-    };
-  }
-  render() {
-    let vehicleMarkers = <Spinner />;
-    if (this.state.vehicles.length) {
-      vehicleMarkers = this.state.vehicles.map(vehicle => {
-        const locations = vehicle.locations.map(l => [l.lat, l.lng]);
-        if (locations.length) {
-          const color = this.colorHash.hex(vehicle.id);
-
-          return (
-            <FeatureGroup key={vehicle.id}>
-              <Polyline positions={locations} color={color} opacity={0.5} />
-            </FeatureGroup>
-          );
-        }
-        return <FeatureGroup key={vehicle.id} />;
-      });
-    }
-
-    let clusteredMarkers = [];
-    if (this.state.vehicles.length) {
-      clusteredMarkers = this.state.vehicles
-        .map(vehicle => {
-          const color = this.colorHash.hex(vehicle.id);
-          const lastPos = vehicle.locations[vehicle.locations.length - 1];
-          if (lastPos) {
-            console.log(Date.now());
-            console.log(Date.parse(lastPos.at));
+      .map(vehicle => {
+        const lastPos = vehicle.locations[vehicle.locations.length - 1];
+        const color = colorHash.hex(vehicle.id);
+        return {
+          position: [lastPos.lat, lastPos.lng],
+          options: {
+            icon: createIcon(color)
           }
-          return lastPos && Date.parse(lastPos.at) + 6000 >= Date.now()
-            ? {
-                position: [lastPos.lat, lastPos.lng],
-                options: {
-                  icon: createIcon(color)
-                }
-              }
-            : null;
-        })
-        .filter(pos => pos !== null);
-    }
-
-    return (
-      <Map center={this.config.office} zoom={this.config.zoom}>
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <Circle
-          center={this.config.office}
-          radius={this.config.radius}
-          fillColor={this.config.bgColor}
-          fillOpacity={0.5}
-          color={this.config.themeColor}
-        />
-        <MarkerClusterGroup markers={clusteredMarkers} />
-        {vehicleMarkers}
-      </Map>
-    );
+        };
+      });
   }
-}
+
+  return (
+    <Map center={config.office} zoom={config.zoom} maxZoom={config.maxZoom}>
+      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      <Circle
+        center={config.office}
+        radius={config.radius}
+        fillColor={config.bgColor}
+        fillOpacity={0.5}
+        color={config.themeColor}
+      />
+      <MarkerClusterGroup markers={clusteredMarkers} />
+      {vehicles
+        .filter(vehicle => vehicle.locations.length)
+        .map(vehicle => (
+          <Polyline
+            key={vehicle.id}
+            positions={vehicle.locations.map(l => [l.lat, l.lng])}
+            color={colorHash.hex(vehicle.id)}
+            opacity={0.5}
+          />
+        ))}
+    </Map>
+  );
+};
+
+MapArea.propTypes = {
+  vehicles: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      locations: PropTypes.arrayOf(
+        PropTypes.shape({
+          lat: PropTypes.number,
+          lng: PropTypes.number,
+          at: PropTypes.string
+        })
+      )
+    })
+  )
+};
 
 export default MapArea;

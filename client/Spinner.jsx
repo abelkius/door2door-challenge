@@ -14,6 +14,17 @@ const Image = styled.img`
   animation: ${spin} 3s infinite linear;
 `;
 
-const Spinner = () => <Image src="/img/loader.svg" />;
+const Div = styled.div`
+  display: block;
+  text-align: center;
+  width: 100%;
+  margin: 50px auto;
+`;
+
+const Spinner = () => (
+  <Div>
+    <Image src="/img/loader.svg" />
+  </Div>
+);
 
 export default Spinner;

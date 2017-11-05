@@ -1,12 +1,12 @@
 import React from 'react';
 import {render} from 'react-dom';
 import Header from './Header';
-import MapArea from './MapArea';
+import Content from './Content';
 
 const App = () => (
   <div>
     <Header />
-    <MapArea />
+    <Content />
   </div>
 );
 
