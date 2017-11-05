@@ -24,7 +24,6 @@ class Content extends Component {
     fetch(`${Endpoint}/vehicles`, reqConfig)
       .then(res => res.json())
       .then(data => {
-        console.info('data: ', data);
         this.setState({vehicles: data});
       })
       .catch(err => console.error('Error: ', err));

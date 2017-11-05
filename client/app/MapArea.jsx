@@ -15,14 +15,13 @@ const config = {
   bgColor: '#ffffff'
 };
 
+// pure component which renders the map with
+// vehicles visualisation based on the received data
 const MapArea = ({vehicles}) => {
   let clusteredMarkers = [];
   if (vehicles.length) {
     clusteredMarkers = vehicles
-      .filter(vehicle => {
-        const lastPos = vehicle.locations[vehicle.locations.length - 1];
-        return lastPos && Date.parse(lastPos.at) + 6000 >= Date.now();
-      })
+      .filter(vehicle => Boolean(vehicle.locations[vehicle.locations.length - 1]))
       .map(vehicle => {
         const lastPos = vehicle.locations[vehicle.locations.length - 1];
         const color = colorHash.hex(vehicle.id);

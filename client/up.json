@@ -2,5 +2,8 @@
   "name": "d2d-client",
   "profile": "default",
   "regions": ["eu-central-1"],
-  "type": "static"
+  "type": "static",
+  "static": {
+    "dir": "public"
+  }
 }

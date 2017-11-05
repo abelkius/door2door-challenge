@@ -1,5 +1,8 @@
 const {docClient} = require('../../db/DynamoDB');
 
+// controller handles communication with database and shape of the reponses
+
+// create a new vehicle
 const createVehicle = (req, res, next) => {
   const params = {
     Item: {
@@ -18,6 +21,7 @@ const createVehicle = (req, res, next) => {
   });
 };
 
+// get a single vehicle
 const getVehicle = (req, res, next) => {
   const params = {
     ConsistentRead: true,
@@ -35,6 +39,8 @@ const getVehicle = (req, res, next) => {
     }
   });
 };
+
+// delete existing vehicle
 const deleteVehicle = (req, res, next) => {
   const params = {
     Key: {
@@ -44,13 +50,15 @@ const deleteVehicle = (req, res, next) => {
 
   docClient.delete(params, err => {
     if (err) {
-      next(Error('Unable to delete vehicle. Error JSON:', JSON.stringify(err, null, 2)));
+      next(new Error(`Unable to delete vehicle.\n${JSON.stringify(err, null, 2)}`));
     } else {
       console.info('Deleting vehicle succeeded:', req.params.id);
       res.status(204).send();
     }
   });
 };
+
+// get all vehicles
 const getAllVehicles = (req, res, next) => {
   const result = [];
 
@@ -73,11 +81,14 @@ const getAllVehicles = (req, res, next) => {
     }
   }
 };
+
+// add location to vehicle's locations array
 const addLocation = (req, res, next) => {
   const params = {
     Key: {
       id: req.params.id
     },
+    // locations gets a new record, which will be concatenated to the existing one, hence the array
     UpdateExpression: 'set locations = list_append(locations, :l)',
     ExpressionAttributeValues: {
       ':l': [req.body]
@@ -87,7 +98,7 @@ const addLocation = (req, res, next) => {
 
   docClient.update(params, err => {
     if (err) {
-      console.error('Unable to update location. Error JSON:', JSON.stringify(err, null, 2));
+      console.error(new Error(`Unable to update location.\n${JSON.stringify(err, null, 2)}`));
       next();
     } else {
       console.info('Updating vehicle with new location succeeded:', req.params.id);

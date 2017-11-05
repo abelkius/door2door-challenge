@@ -11,6 +11,7 @@ const Heading = styled.h1`
   margin: 0;
 `;
 
+// pure component presenting the app heading
 const Header = () => <Heading>Track them all!</Heading>;
 
 export default Header;

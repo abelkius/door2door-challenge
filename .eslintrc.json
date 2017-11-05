@@ -2,8 +2,7 @@
   "env": {
     "browser": true,
     "es6": true,
-    "node": true,
-    "jest": true
+    "node": true
   },
   "extends": ["airbnb-base", "plugin:react/recommended", "prettier", "prettier/react"],
   "plugins": ["react", "import", "prettier"],

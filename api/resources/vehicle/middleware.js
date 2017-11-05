@@ -3,6 +3,7 @@ const geolib = require('geolib');
 const office = [52.53, 13.403];
 const cityRadius = 3500;
 
+// a middleware function to validate id the location is inside the city boundries
 module.exports = function validateLocation(req, res, next) {
   if (!req.body || !req.body.lat || !req.body.lng) {
     res.status(500).send('Invalid request body');

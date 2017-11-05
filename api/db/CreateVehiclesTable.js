@@ -9,6 +9,7 @@ const params = {
   }
 };
 
+// utility script for ceating a table
 client.createTable(params, (err, data) => {
   if (err) {
     console.error('Unable to create table. Error JSON:', JSON.stringify(err, null, 2));
