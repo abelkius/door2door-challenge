@@ -1,4 +1,4 @@
-const {client} = require('./DynamoDB');
+const {client} = require('./dynamoDB');
 
 const params = {
   KeySchema: [{AttributeName: 'id', KeyType: 'HASH'}],

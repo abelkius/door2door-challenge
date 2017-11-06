@@ -1,4 +1,4 @@
-const {client} = require('./DynamoDB');
+const {client} = require('./dynamoDB');
 
 // utility script for deleting a table
 client.deleteTable({}, (err, data) => {

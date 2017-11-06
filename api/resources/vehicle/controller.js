@@ -1,4 +1,4 @@
-const {docClient} = require('../../db/DynamoDB');
+const {docClient} = require('../../db/dynamoDB');
 
 // controller handles communication with database and shape of the reponses
 
